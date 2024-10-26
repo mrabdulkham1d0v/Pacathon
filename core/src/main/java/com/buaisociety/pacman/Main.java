@@ -105,7 +105,7 @@ public class Main extends ApplicationAdapter {
         // Change this to true/false as needed, if you want to load from file
         if (true) {
             // TODO: Change this to the exact file you want to load
-            File exactFile = new File("saves" + File.separator + "oct26-16" + File.separator + "generation-135.json");
+            File exactFile = new File("saves" + File.separator + "oct26-19" + File.separator + "generation-145.json");
             // load exactFile contents to string
             String json;
             try {
