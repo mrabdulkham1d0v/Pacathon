@@ -100,4 +100,9 @@ public class Tile {
     public int hashCode() {
         return Objects.hash(maze, position);
     }
+
+    public boolean isWalkable() {
+        return state != TileState.WALL;
+    }
+    
 }

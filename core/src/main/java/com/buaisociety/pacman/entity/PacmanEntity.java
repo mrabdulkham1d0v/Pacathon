@@ -23,6 +23,13 @@ public class PacmanEntity extends Entity {
     private int freezeTicks;
     private boolean isAlive = true;
 
+    private int powerPelletsEaten = 0;
+    private int fruitsEaten = 0;
+    private int pelletsEaten = 0;
+    private int ghostsEaten = 0;
+    private int currentLevel;
+    private boolean advancedToNextLevel = false;
+
     public PacmanEntity(@NotNull Maze maze, @NotNull Config config) {
         super(maze, EntityType.PACMAN);
 
@@ -43,6 +50,11 @@ public class PacmanEntity extends Entity {
 
         setPosition(new Vector2d(spawnPixel));
         this.direction = Direction.UP;
+
+        isAlive = true;
+        advancedToNextLevel = false;
+
+        currentLevel = maze.getLevelManager().getLevel();
     }
 
     @Override
@@ -97,6 +109,13 @@ public class PacmanEntity extends Entity {
     public void update() {
         super.update();
 
+        // Check if the level has advanced
+        int mazeLevel = maze.getLevelManager().getLevel();
+        if (mazeLevel > currentLevel) {
+            setAdvancedToNextLevel(true);
+            currentLevel = mazeLevel;
+        }
+
         // Pacman will freeze for a few ticks when eating pellets and power pellets
         if (freezeTicks > 0) {
             freezeTicks--;
@@ -118,8 +137,10 @@ public class PacmanEntity extends Entity {
         TileState pellet = maze.eatPellet(this, tile);
         if (pellet == TileState.PELLET) {
             freezeTicks += 1;
+            incrementPelletsEaten();
         } else if (pellet == TileState.POWER_PELLET) {
             freezeTicks += 3;
+            incrementPowerPelletsEaten();
         }
     }
 
@@ -148,5 +169,45 @@ public class PacmanEntity extends Entity {
         public @NotNull Behavior behavior = new AggressiveChaseBehavior();
         public @NotNull Vector2i spawnPixel = new Vector2i();
         public @NotNull GrayscaleSpriteSheet spriteSheet = new GrayscaleSpriteSheet(new Texture("sprites/pacman-sprite.png"), 20);
+    }
+
+    public void incrementPowerPelletsEaten() {
+        powerPelletsEaten++;
+    }
+    
+    public int getPowerPelletsEaten() {
+        return powerPelletsEaten;
+    }
+    
+    public void incrementFruitsEaten() {
+        fruitsEaten++;
+    }
+    
+    public int getFruitsEaten() {
+        return fruitsEaten;
+    }
+
+    public void incrementPelletsEaten() {
+        pelletsEaten++;
+    }
+    
+    public int getPelletsEaten() {
+        return pelletsEaten;
+    }
+
+    public void incrementGhostsEaten() {
+        ghostsEaten++;
+    }
+    
+    public int getGhostsEaten() {
+        return ghostsEaten;
+    }
+
+    public void setAdvancedToNextLevel(boolean advanced) {
+        this.advancedToNextLevel = advanced;
+    }
+
+    public boolean hasAdvancedToNextLevel() {
+        return advancedToNextLevel;
     }
 }

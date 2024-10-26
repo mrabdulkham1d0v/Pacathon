@@ -359,6 +359,10 @@ public class GhostEntity extends Entity {
         spriteSheet.dispose();
     }
 
+    public boolean isFrightened() {
+        return state == GhostState.FRIGHTENED;
+    }
+
 
     public static class Config {
         public boolean isElroy = false;
@@ -374,4 +378,6 @@ public class GhostEntity extends Entity {
         public @NotNull Color[] colorsFlash = new Color[]{};
         public @NotNull Color[] colorsEaten = new Color[]{};
     }
+
+    
 }

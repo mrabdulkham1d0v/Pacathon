@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.buaisociety.pacman.GameManager;
+import com.buaisociety.pacman.entity.Direction;
 import com.buaisociety.pacman.entity.Entity;
 import com.buaisociety.pacman.entity.EntityType;
 import com.buaisociety.pacman.entity.FruitEntity;
@@ -84,6 +85,8 @@ public class Maze implements Disposable {
     private boolean isGhostChase;  // true if the ghosts are in chase mode, false if in scatter mode
     private int ghostChaseIndex;  // index of the current chase/scatter mode
 
+    private Vector2ic dimensions;
+
     public Maze(
         @NotNull GameManager gameManager,
         @NotNull Sprite levelSprite,
@@ -117,6 +120,9 @@ public class Maze implements Disposable {
 
         // Game is frozen for the first 4 seconds
         gameStartTicks = 60 * 4;
+
+        // Set the dimensions based on the size of the tiles array
+        dimensions = new Vector2i(tiles.length, tiles[0].length);
     }
 
     /**
@@ -379,6 +385,7 @@ public class Maze implements Disposable {
                     ghost.setState(GhostState.FRIGHTENED);
                 }
             }
+            pacman.incrementPowerPelletsEaten();
         } else {
             // Make sure we actually ate a pellet
             return state;
@@ -525,4 +532,50 @@ public class Maze implements Disposable {
         bonusPointsSprite.dispose();
         fruitSprite.dispose();
     }
+
+    public Tile[][] getTiles() {
+        return tiles;
+    }
+
+    public int getWidth() {
+        return tiles[0].length;
+    }
+    
+    public int getHeight() {
+        return tiles.length;
+    }
+
+    
+    
+    public Tile getAdjacentTile(Tile tile, Direction direction) {
+        int x = tile.getPosition().x();
+        int y = tile.getPosition().y();
+    
+        switch (direction) {
+            case UP:
+                y += 1;
+                break;
+            case DOWN:
+                y -= 1;
+                break;
+            case LEFT:
+                x -= 1;
+                break;
+            case RIGHT:
+                x += 1;
+                break;
+            default:
+                return null;
+        }
+    
+        // Use the dimensions variable to check boundaries
+        if (x < 0 || x >= dimensions.x() || y < 0 || y >= dimensions.y()) {
+            return null; // Out of bounds
+        }
+    
+        return getTile(x, y);
+    }
+    
+
+    
 }
