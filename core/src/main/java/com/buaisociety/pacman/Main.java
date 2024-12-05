@@ -105,7 +105,7 @@ public class Main extends ApplicationAdapter {
         // Change this to true/false as needed, if you want to load from file
         if (true) {
             // TODO: Change this to the exact file you want to load
-            File exactFile = new File("saves" + File.separator + "oct26-19" + File.separator + "generation-145.json");
+            File exactFile = new File("saves" + File.separator + "dec04-8" + File.separator + "generation-212.json");
             // load exactFile contents to string
             String json;
             try {
@@ -176,19 +176,22 @@ public class Main extends ApplicationAdapter {
             manager.getGameManager().dispose();
         }
         managers.clear();
-
+    
         for (int i = 0; i < totalGames; i++) {
             GameManager.Config config = new GameManager.Config();
             config.id = i;
+            config.levelsPreset = "tournament_levels.json"; // Use tournament levels
+            config.handicap = 8; // Set handicap to match tournament settings
             GameManager gameManager = new GameManager(events, config);
             gameManager.nextLevel();
             gameManager.setExtraLives(0);
-
+    
             PacmanNeatClient neatClient = new PacmanNeatClient(neat, neat.getClients().get(i));
             neatClient.setGameManager(gameManager);
             this.managers.add(neatClient);
         }
     }
+    
 
     @Override
     public void render() {
